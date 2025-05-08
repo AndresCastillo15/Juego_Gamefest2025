@@ -59,3 +59,6 @@ mostrar_pantalla_inicial()
 
 # Aquí iría el resto del código del juego (main loop)
 print("¡Comienza el juego!")
+
+
+## BETA

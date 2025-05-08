@@ -16,6 +16,7 @@ BLANCO = (255, 255, 255)
 MARRON = (218, 113, 15)
 VERDE = (34, 139, 34)
 ROJO = (194, 11, 11)
+AMARILLO = (255, 251, 0)
 
 # Constantes y físicas
 PLAYER_SIZE = 50
@@ -92,7 +93,7 @@ def verificar_colision_red(pelota):
 def dibujar_fondo():
     pantalla.fill(AZUL_CIELO)
     pygame.draw.rect(pantalla, DORADO, (0, 350, 800, 50))  # Arena
-    pygame.draw.circle(pantalla, BLANCO, (700, 50), 30)    # Sol
+    pygame.draw.circle(pantalla, AMARILLO, (700, 50), 30)    # Sol
     pygame.draw.rect(pantalla, MARRON, (100, 250, 15, 100))
     pygame.draw.circle(pantalla, VERDE, (108, 230), 40)
     pygame.draw.rect(pantalla, MARRON, (680, 270, 15, 100))
@@ -188,3 +189,6 @@ while True:
         mostrar_texto("Presiona R para reiniciar", fuente_info, AZUL_FONDO, ANCHO//2 - 140, 140)
 
     pygame.display.flip()
+
+
+## BETA
