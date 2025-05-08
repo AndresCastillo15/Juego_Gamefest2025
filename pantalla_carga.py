@@ -6,9 +6,9 @@ pygame.init()
 
 # Configurar la pantalla
 ANCHO = 800
-ALTO = 600
+ALTO = 400
 pantalla = pygame.display.set_mode((ANCHO, ALTO))
-pygame.display.set_caption("GeoVolley - Pantalla Inicial")
+pygame.display.set_caption("VolleyBash - Pantalla Inicial")
 
 # Colores
 BLANCO = (255, 255, 255)
@@ -24,7 +24,7 @@ def mostrar_pantalla_inicial():
     pantalla.fill(AZUL)
     
     # Título
-    titulo = fuente_titulo.render("GeoVolley", True, BLANCO)
+    titulo = fuente_titulo.render("VolleyBash", True, BLANCO)
     pantalla.blit(titulo, (ANCHO // 2 - titulo.get_width() // 2, 100))
     
     # Subtítulo
@@ -32,7 +32,7 @@ def mostrar_pantalla_inicial():
     pantalla.blit(subtitulo, (ANCHO // 2 - subtitulo.get_width() // 2, 180))
 
     # Autores
-    autores = fuente_texto.render("Creado por: [Nombre1], [Nombre2], [Tu Nombre]", True, BLANCO)
+    autores = fuente_texto.render("Creado por: Andres Castillo, Carlos Galvis, Eyersson Montaña", True, BLANCO)
     pantalla.blit(autores, (ANCHO // 2 - autores.get_width() // 2, 250))
 
     colegio = fuente_texto.render("Colegio San José de Guanentá - 2025", True, BLANCO)
