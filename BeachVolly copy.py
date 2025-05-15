@@ -1,5 +1,5 @@
-# Beach Volly
-import pygame, sys
+import pygame
+import sys
 
 # Inicialización de Pygame
 pygame.init()
@@ -8,35 +8,32 @@ pantalla = pygame.display.set_mode((ANCHO, ALTO))
 pygame.display.set_caption("Beach Volly")
 clock = pygame.time.Clock()
 
-# Colores
-AZUL_FONDO = (2, 6, 149)
-AZUL_CIELO = (135, 206, 235)
-DORADO = (213, 173, 25)
-BLANCO = (255, 255, 255)
-MARRON = (218, 113, 15)
-VERDE = (34, 139, 34)
-ROJO = (194, 11, 11)
-
-# Jugadores, pelota y física
+# Constantes
 PLAYER_SIZE = 50
 GROUND_Y = 300
 GRAVITY = 0.5
 PUNTOS_MAX = 3
-DELAY_PELOTA = 60  # Frames (1 segundo si va a 60 FPS)
+DELAY_PELOTA = 60
 
 # Fuente de texto
 font = pygame.font.SysFont("Arial", 30, 1, 1)
 
-# Cargar imagen del logo
+# Cargar imagenes
 logo = pygame.image.load("img/logo.png")
 logo = pygame.transform.scale(logo, (150, 150))
 
-# Función para crear jugador
+fondo = pygame.image.load("img/cancha.png")
+fondo = pygame.transform.scale(fondo, (ANCHO, ALTO))
 
+player1_img = pygame.image.load("img/player1.png")
+player1_img = pygame.transform.scale(player1_img, (150, 150))
+
+player2_img = pygame.image.load("img/player2.png")
+player2_img = pygame.transform.scale(player2_img, (150, 150))
+
+# Funciones
 def crear_jugador(x):
-    return {"x": x, "y": GROUND_Y, "vel": 5, "is_jumping": False, "jump_vel": 10}
-
-# Función para reiniciar pelota con dirección
+    return {"x": x, "y": GROUND_Y - 10, "vel": 5, "is_jumping": False, "jump_vel": 10}
 
 def reiniciar_pelota(hacia_izquierda):
     return {
@@ -47,15 +44,6 @@ def reiniciar_pelota(hacia_izquierda):
         "vel_y": 0
     }
 
-# Inicializar jugadores y estado del juego
-p1, p2 = crear_jugador(100), crear_jugador(650)
-ball = reiniciar_pelota(False)
-p1_score, p2_score = 0, 0
-juego_terminado = False
-contador_reinicio = 0
-
-# Movimiento de los jugadores
-
 def mover_jugador(j, izq, der, salto, keys, min_x, max_x):
     if keys[izq] and j["x"] > min_x:
         j["x"] -= j["vel"]
@@ -65,8 +53,6 @@ def mover_jugador(j, izq, der, salto, keys, min_x, max_x):
         j["is_jumping"] = True
         j["jump_vel"] = 10
 
-# Física del salto
-
 def actualizar_salto(j):
     if j["is_jumping"]:
         j["y"] -= j["jump_vel"]
@@ -75,16 +61,12 @@ def actualizar_salto(j):
             j["y"] = GROUND_Y
             j["is_jumping"] = False
 
-# Colisión entre jugador y pelota
-
 def verificar_colision(j, pelota):
     jr = pygame.Rect(j["x"], j["y"], PLAYER_SIZE, PLAYER_SIZE)
     pr = pygame.Rect(pelota["x"] - pelota["radius"], pelota["y"] - pelota["radius"], pelota["radius"]*2, pelota["radius"]*2)
     if jr.colliderect(pr):
         pelota["vel_x"] *= -1
         pelota["vel_y"] = -7
-
-# Colisión con la red
 
 def verificar_colision_red(pelota):
     red = pygame.Rect(ANCHO//2 - 5, 200, 10, 200)
@@ -96,35 +78,31 @@ def verificar_colision_red(pelota):
         else:
             pelota["x"] = ANCHO//2 + 6 + pelota["radius"]
 
-# Dibujar fondo
-
 def dibujar_fondo():
-    pantalla.fill(AZUL_CIELO)
-    pygame.draw.rect(pantalla, DORADO, (0, 350, 800, 50))  # Arena
-    pygame.draw.circle(pantalla, BLANCO, (700, 50), 30)    # Sol
-    pygame.draw.rect(pantalla, MARRON, (100, 250, 15, 100))
-    pygame.draw.circle(pantalla, VERDE, (108, 230), 40)
-    pygame.draw.rect(pantalla, MARRON, (680, 270, 15, 100))
-    pygame.draw.circle(pantalla, VERDE, (688, 250), 40)
-
-# Mostrar texto en pantalla
+    pantalla.blit(fondo, (0, 0))
 
 def mostrar_texto(txt, color, x, y):
     render = font.render(txt, True, color)
     pantalla.blit(render, (x, y))
 
-# Pantalla inicial con logo y presentación
+# Inicialización
+p1, p2 = crear_jugador(100), crear_jugador(650)
+ball = reiniciar_pelota(False)
+p1_score, p2_score = 0, 0
+juego_terminado = False
+contador_reinicio = 0
+
+# Pantalla inicial
 mostrar_pantalla = True
 while mostrar_pantalla:
     dibujar_fondo()
     pantalla.blit(logo, (ANCHO//2 - 75, 20))
 
-    fuente = pygame.font.SysFont("Arial", 30, 1, 1)
-    titulo = fuente.render("Beach Volly", True, BLANCO)
-    subtitulo = pygame.font.SysFont("Arial", 24).render("Un juego de voleibol con figuras geométricas", True, BLANCO)
-    autores = pygame.font.SysFont("Arial", 20).render("Andres Castillo, Carlos Galvis, Eyersson Montaña", True, BLANCO)
-    colegio = pygame.font.SysFont("Arial", 20).render("Colegio San José de Guanentá - 2025", True, BLANCO)
-    iniciar = pygame.font.SysFont("Arial", 20).render("Presiona ENTER para comenzar", True, AZUL_FONDO)
+    titulo = font.render("Beach Volly", True, (255, 255, 255))
+    subtitulo = pygame.font.SysFont("Arial", 24).render("Un juego de voleibol con figuras geométricas", True, (255, 255, 255))
+    autores = pygame.font.SysFont("Arial", 20).render("Andres Castillo, Carlos Galvis, Eyersson Montaña", True, (255, 255, 255))
+    colegio = pygame.font.SysFont("Arial", 20).render("Colegio San José de Guanentá - 2025", True, (255, 255, 255))
+    iniciar = pygame.font.SysFont("Arial", 20).render("Presiona ENTER para comenzar", True, (2, 6, 149))
 
     pantalla.blit(titulo, (ANCHO//2 - titulo.get_width()//2, 180))
     pantalla.blit(subtitulo, (ANCHO//2 - subtitulo.get_width()//2, 220))
@@ -138,11 +116,10 @@ while mostrar_pantalla:
         if e.type == pygame.QUIT:
             pygame.quit()
             sys.exit()
-        elif e.type == pygame.KEYDOWN:
-            if e.key == pygame.K_RETURN:
-                mostrar_pantalla = False
+        elif e.type == pygame.KEYDOWN and e.key == pygame.K_RETURN:
+            mostrar_pantalla = False
 
-# Bucle principal del juego
+# Bucle principal
 while True:
     clock.tick(60)
     for evento in pygame.event.get():
@@ -184,7 +161,6 @@ while True:
                 juego_terminado = True
         else:
             contador_reinicio -= 1
-
     else:
         if keys[pygame.K_r]:
             p1_score, p2_score = 0, 0
@@ -192,21 +168,30 @@ while True:
             ball = reiniciar_pelota(False)
             contador_reinicio = 0
 
+    # Dibujo
     dibujar_fondo()
-    pygame.draw.rect(pantalla, ROJO, (p1["x"], p1["y"], PLAYER_SIZE, PLAYER_SIZE))
-    pygame.draw.rect(pantalla, ROJO, (p2["x"], p2["y"], PLAYER_SIZE, PLAYER_SIZE))
-    pygame.draw.circle(pantalla, BLANCO, (int(ball["x"]), int(ball["y"])), ball["radius"])
-    pygame.draw.rect(pantalla, AZUL_FONDO, (ANCHO//2 - 5, 200, 10, 200))
 
-    mostrar_texto(f"{p1_score}", AZUL_FONDO, 50, 20)
-    mostrar_texto(f"{p2_score}", AZUL_FONDO, 730, 20)
+    # Jugador 1 (imagen grande)
+    img_offset_x = (150 - PLAYER_SIZE) // 2
+    img_offset_y = (150 - PLAYER_SIZE)
+    pantalla.blit(player1_img, (p1["x"] - img_offset_x, p1["y"] - img_offset_y))
+
+    # Jugador 2 (imagen grande)
+    pantalla.blit(player2_img, (p2["x"] - img_offset_x, p2["y"] - img_offset_y))
+
+    # Pelota
+    pygame.draw.circle(pantalla, (255, 255, 255), (int(ball["x"]), int(ball["y"])), ball["radius"])
+
+    # Red
+    pygame.draw.rect(pantalla, (2, 6, 149), (ANCHO//2 - 5, 200, 10, 200))
+
+    # Puntos
+    mostrar_texto(f"{p1_score}", (2, 6, 149), 50, 20)
+    mostrar_texto(f"{p2_score}", (2, 6, 149), 730, 20)
 
     if juego_terminado:
         texto = "¡Jugador 1 gana!" if p1_score > p2_score else "¡Jugador 2 gana!"
-        mostrar_texto(texto, ROJO, ANCHO//2 - 100, 100)
-        mostrar_texto("Presiona R para reiniciar", AZUL_FONDO, ANCHO//2 - 140, 140)
+        mostrar_texto(texto, (194, 11, 11), ANCHO//2 - 100, 100)
+        mostrar_texto("Presiona R para reiniciar", (2, 6, 149), ANCHO//2 - 140, 140)
 
     pygame.display.flip()
-
-
-## BETA
