@@ -16,9 +16,9 @@ PUNTOS_MAX = 3
 DELAY_PELOTA = 60
 
 # Fuente de texto
-font = pygame.font.SysFont("Arial", 30, 1, 1)
+font = pygame.font.SysFont("Arial", 30, bold=True)
 
-# Cargar imagenes
+# Cargar imágenes
 logo = pygame.image.load("img/logo.png")
 logo = pygame.transform.scale(logo, (150, 150))
 
@@ -31,6 +31,12 @@ player1_img = pygame.transform.scale(player1_img, (150, 150))
 player2_img = pygame.image.load("img/player2.png")
 player2_img = pygame.transform.scale(player2_img, (150, 150))
 
+# Cargar sonidos
+pygame.mixer.music.load("sonidos/canciondefondo.mp3")
+pygame.mixer.music.play(-1)
+
+sonido_pelota = pygame.mixer.Sound("sonidos/pelota.mp3")
+
 # Funciones
 def crear_jugador(x):
     return {"x": x, "y": GROUND_Y - 10, "vel": 5, "is_jumping": False, "jump_vel": 10}
@@ -41,7 +47,8 @@ def reiniciar_pelota(hacia_izquierda):
         "y": 150,
         "radius": 15,
         "vel_x": -4 if hacia_izquierda else 4,
-        "vel_y": 0
+        "vel_y": 0,
+        "min_rebote": 1
     }
 
 def mover_jugador(j, izq, der, salto, keys, min_x, max_x):
@@ -61,12 +68,17 @@ def actualizar_salto(j):
             j["y"] = GROUND_Y
             j["is_jumping"] = False
 
-def verificar_colision(j, pelota):
+def verificar_colision(j, pelota, jugador_actual):
     jr = pygame.Rect(j["x"], j["y"], PLAYER_SIZE, PLAYER_SIZE)
     pr = pygame.Rect(pelota["x"] - pelota["radius"], pelota["y"] - pelota["radius"], pelota["radius"]*2, pelota["radius"]*2)
-    if jr.colliderect(pr):
-        pelota["vel_x"] *= -1
-        pelota["vel_y"] = -7
+    if jr.colliderect(pr) and jugador_actual != j:
+        pelota["vel_x"] = 4 if j == p1 else -4
+        pelota["vel_x"] *= 1.05  # Aumenta la velocidad en cada golpe
+        pelota["vel_y"] = -7 * pelota["min_rebote"]  # Rebote proporcional
+        pelota["min_rebote"] = min(pelota["min_rebote"] + 0.05, 1.5)  # Aumenta hasta 1.5
+        sonido_pelota.play()
+        return j
+    return jugador_actual
 
 def verificar_colision_red(pelota):
     red = pygame.Rect(ANCHO//2 - 5, 200, 10, 200)
@@ -82,6 +94,15 @@ def dibujar_fondo():
     pantalla.blit(fondo, (0, 0))
 
 def mostrar_texto(txt, color, x, y):
+    # Contorno negro grueso
+    contorno = 3
+    negro = (0, 0, 0)
+    for dx in range(-contorno, contorno+1):
+        for dy in range(-contorno, contorno+1):
+            if dx != 0 or dy != 0:
+                render = font.render(txt, True, negro)
+                pantalla.blit(render, (x+dx, y+dy))
+    # Texto en color principal
     render = font.render(txt, True, color)
     pantalla.blit(render, (x, y))
 
@@ -91,6 +112,7 @@ ball = reiniciar_pelota(False)
 p1_score, p2_score = 0, 0
 juego_terminado = False
 contador_reinicio = 0
+ultimo_golpeador = None
 
 # Pantalla inicial
 mostrar_pantalla = True
@@ -99,10 +121,10 @@ while mostrar_pantalla:
     pantalla.blit(logo, (ANCHO//2 - 75, 20))
 
     titulo = font.render("Beach Volly", True, (255, 255, 255))
-    subtitulo = pygame.font.SysFont("Arial", 24).render("Un juego de voleibol con figuras geométricas", True, (255, 255, 255))
-    autores = pygame.font.SysFont("Arial", 20).render("Andres Castillo, Carlos Galvis, Eyersson Montaña", True, (255, 255, 255))
-    colegio = pygame.font.SysFont("Arial", 20).render("Colegio San José de Guanentá - 2025", True, (255, 255, 255))
-    iniciar = pygame.font.SysFont("Arial", 20).render("Presiona ENTER para comenzar", True, (2, 6, 149))
+    subtitulo = pygame.font.SysFont("Arial", 24, bold=True).render("Un juego de voleibol con figuras geométricas", True, (255, 255, 255))
+    autores = pygame.font.SysFont("Arial", 20, bold=True).render("Andres Castillo, Carlos Galvis, Eyersson Montaña", True, (255, 255, 255))
+    colegio = pygame.font.SysFont("Arial", 20, bold=True).render("Colegio San José de Guanentá - 2025", True, (255, 255, 255))
+    iniciar = pygame.font.SysFont("Arial", 20, bold=True).render("Presiona ENTER para comenzar", True, (2, 6, 149))
 
     pantalla.blit(titulo, (ANCHO//2 - titulo.get_width()//2, 180))
     pantalla.blit(subtitulo, (ANCHO//2 - subtitulo.get_width()//2, 220))
@@ -148,13 +170,15 @@ while True:
                     p2_score += 1
                     contador_reinicio = DELAY_PELOTA
                     ball = reiniciar_pelota(False)
+                    ultimo_golpeador = None
                 else:
                     p1_score += 1
                     contador_reinicio = DELAY_PELOTA
                     ball = reiniciar_pelota(True)
+                    ultimo_golpeador = None
 
-            verificar_colision(p1, ball)
-            verificar_colision(p2, ball)
+            ultimo_golpeador = verificar_colision(p1, ball, ultimo_golpeador)
+            ultimo_golpeador = verificar_colision(p2, ball, ultimo_golpeador)
             verificar_colision_red(ball)
 
             if p1_score >= PUNTOS_MAX or p2_score >= PUNTOS_MAX:
@@ -167,16 +191,15 @@ while True:
             juego_terminado = False
             ball = reiniciar_pelota(False)
             contador_reinicio = 0
+            ultimo_golpeador = None
 
     # Dibujo
     dibujar_fondo()
 
-    # Jugador 1 (imagen grande)
+    # Jugadores
     img_offset_x = (150 - PLAYER_SIZE) // 2
     img_offset_y = (150 - PLAYER_SIZE)
     pantalla.blit(player1_img, (p1["x"] - img_offset_x, p1["y"] - img_offset_y))
-
-    # Jugador 2 (imagen grande)
     pantalla.blit(player2_img, (p2["x"] - img_offset_x, p2["y"] - img_offset_y))
 
     # Pelota
@@ -186,8 +209,8 @@ while True:
     pygame.draw.rect(pantalla, (2, 6, 149), (ANCHO//2 - 5, 200, 10, 200))
 
     # Puntos
-    mostrar_texto(f"{p1_score}", (2, 6, 149), 50, 20)
-    mostrar_texto(f"{p2_score}", (2, 6, 149), 730, 20)
+    mostrar_texto(f"{p1_score}", (255, 0, 0), 50, 20)
+    mostrar_texto(f"{p2_score}", (255, 0, 0), 730, 20)
 
     if juego_terminado:
         texto = "¡Jugador 1 gana!" if p1_score > p2_score else "¡Jugador 2 gana!"
