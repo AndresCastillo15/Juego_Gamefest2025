@@ -1,64 +1,63 @@
-# Juego_Gamefest2025
-## Nombre del Juego:
- - Beach Volly
-### Objetivo del Juego:
-El objetivo del juego es marcar puntos haciendo que la pelota toque el suelo del lado del oponente. Cada jugador controla una figura geométrica (por ejemplo, un círculo o un cuadrado) y deben golpear una pelota para enviarla al otro lado de la red.
+# 🎮 Juego_Gamefest2025
+## 🏐 Nombre del Juego:
+**Beach Volly**
 
-### Mecánica General:
-Juego 1 contra 1: Jugador contra la computadora o jugador contra jugador (modo local).
+---
 
+### 🎯 Objetivo del Juego:
+El objetivo del juego es marcar puntos haciendo que la pelota toque el suelo del lado del oponente. Cada jugador controla un personaje con apariencia de figura geométrica animada y deben golpear una pelota para enviarla al otro lado de la red.
 
-- Cada jugador controla una figura geométrica que se puede mover horizontalmente y saltar.
+---
 
+### ⚙️ Mecánica General:
+- Juego 1 contra 1: jugador contra jugador en modo local.
+- Cada jugador puede **moverse horizontalmente y saltar**.
+- La pelota tiene gravedad, **rebota progresivamente más alto y más rápido** con cada golpe.
+- Gana el primero en llegar a **3 puntos**.
 
-- La pelota cae con gravedad y rebota al ser golpeada por un jugador.
+---
 
+### 🎮 Controles:
 
-- Gana quien llegue primero a una cantidad determinada de puntos (por ejemplo, 5 puntos).
+**Jugador 1:**
+- `A` y `D`: mover
+- `W`: saltar
 
+**Jugador 2:**
+- `←` y `→`: mover
+- `↑`: saltar
 
+---
 
-## Controles:
-Jugador 1:
-Tecla A y tecla D: mover
-Tecla W: saltar
+### 📏 Reglas del Juego:
+- La partida comienza con un saque desde el centro.
+- Si la pelota **toca el suelo** del lado de un jugador, el rival gana un punto.
+- La pelota **no puede rebotar más de una vez** en el mismo jugador sin tocar otro objeto.
+- El primero en alcanzar los puntos máximos gana.
 
-Jugador 2:
-Flecha izquierda y flecha derecha: mover
-Flecha Arriba: saltar
+---
 
+### 🖼️ Elementos Visuales:
 
+| Jugador 1 | Jugador 2 |
+|----------|-----------|
+| ![Jugador 1](img/player1.png) | ![Jugador 2](img/player2.png) |
 
-## Reglas del Juego:
-El juego comienza con un saque desde el centro del campo.
+- **Contorno negro grueso** (grosor 3) aplicado a todos los textos para mejorar su legibilidad.
+- Fondo: imagen de cancha de voleibol (`img/cancha.png`).
+- Red al centro del campo: línea azul oscura.
+- Pelota blanca, circular, con rebote progresivo.
 
+---
 
-- Si la pelota toca el suelo del lado de un jugador, el punto es para el rival.
+### 🔊 Sonido:
+- **Música de fondo** (`sonidos/canciondefondo.mp3`) durante todo el juego.
+- **Sonido de golpe de pelota** (`sonidos/pelota.mp3`) cada vez que un jugador impacta la pelota.
+- Indicadores visuales con texto grande cuando **un jugador gana**.
 
+---
 
-- El primer jugador en llegar al número de puntos establecidos gana el partido.
-
-
-- La pelota no puede rebotar más de tres veces en un mismo lado.
-
-
-
-## Elementos Visuales:
-Figuras geométricas como personajes (cuadrados).
-
-
-- Pelota circular sencilla.
-- Fondo básico con colores planos o una imagen de fondo.
-- Red al centro del campo (representada por una línea o rectángulo).
-
-#### Sonido :
-- Efecto de sonido al golpear la pelota o al anotar un punto.
-- Música de fondo sencilla.
-- Texto o cambio visual cuando un jugador gana el partido.
-
-
-
-# Integrantes:
-- Andres Felipe Castillo Neira
-- Carlos Esteban Galvis Montaña
+### 👨‍👦‍👦 Integrantes:
+- Andres Felipe Castillo Neira  
+- Carlos Esteban Galvis Montaña  
 - Eyersson Barcelly Montaña Chaparro

@@ -73,9 +73,9 @@ def verificar_colision(j, pelota, jugador_actual):
     pr = pygame.Rect(pelota["x"] - pelota["radius"], pelota["y"] - pelota["radius"], pelota["radius"]*2, pelota["radius"]*2)
     if jr.colliderect(pr) and jugador_actual != j:
         pelota["vel_x"] = 4 if j == p1 else -4
-        pelota["vel_x"] *= 1.05  # Aumenta la velocidad en cada golpe
-        pelota["vel_y"] = -7 * pelota["min_rebote"]  # Rebote proporcional
-        pelota["min_rebote"] = min(pelota["min_rebote"] + 0.05, 1.5)  # Aumenta hasta 1.5
+        pelota["vel_x"] *= 1.05
+        pelota["vel_y"] = -7 * pelota["min_rebote"]
+        pelota["min_rebote"] = min(pelota["min_rebote"] + 0.05, 1.5)
         sonido_pelota.play()
         return j
     return jugador_actual
@@ -94,7 +94,6 @@ def dibujar_fondo():
     pantalla.blit(fondo, (0, 0))
 
 def mostrar_texto(txt, color, x, y):
-    # Contorno negro grueso
     contorno = 3
     negro = (0, 0, 0)
     for dx in range(-contorno, contorno+1):
@@ -102,7 +101,6 @@ def mostrar_texto(txt, color, x, y):
             if dx != 0 or dy != 0:
                 render = font.render(txt, True, negro)
                 pantalla.blit(render, (x+dx, y+dy))
-    # Texto en color principal
     render = font.render(txt, True, color)
     pantalla.blit(render, (x, y))
 
@@ -120,17 +118,20 @@ while mostrar_pantalla:
     dibujar_fondo()
     pantalla.blit(logo, (ANCHO//2 - 75, 20))
 
-    titulo = font.render("Beach Volly", True, (255, 255, 255))
-    subtitulo = pygame.font.SysFont("Arial", 24, bold=True).render("Un juego de voleibol con figuras geométricas", True, (255, 255, 255))
-    autores = pygame.font.SysFont("Arial", 20, bold=True).render("Andres Castillo, Carlos Galvis, Eyersson Montaña", True, (255, 255, 255))
-    colegio = pygame.font.SysFont("Arial", 20, bold=True).render("Colegio San José de Guanentá - 2025", True, (255, 255, 255))
-    iniciar = pygame.font.SysFont("Arial", 20, bold=True).render("Presiona ENTER para comenzar", True, (2, 6, 149))
+    titulo = "Beach Volly"
+    mostrar_texto(titulo, (255, 255, 255), ANCHO//2 - font.size(titulo)[0]//2, 180)
 
-    pantalla.blit(titulo, (ANCHO//2 - titulo.get_width()//2, 180))
-    pantalla.blit(subtitulo, (ANCHO//2 - subtitulo.get_width()//2, 220))
-    pantalla.blit(autores, (ANCHO//2 - autores.get_width()//2, 260))
-    pantalla.blit(colegio, (ANCHO//2 - colegio.get_width()//2, 290))
-    pantalla.blit(iniciar, (ANCHO//2 - iniciar.get_width()//2, 320))
+    subtitulo = "Un juego de voleibol con figuras geométricas"
+    mostrar_texto(subtitulo, (255, 255, 255), ANCHO//2 - font.size(subtitulo)[0]//2, 220)
+
+    autores = "Andres Castillo, Carlos Galvis, Eyersson Montaña"
+    mostrar_texto(autores, (255, 255, 255), ANCHO//2 - font.size(autores)[0]//2, 260)
+
+    colegio = "Colegio San José de Guanentá - 2025"
+    mostrar_texto(colegio, (255, 255, 255), ANCHO//2 - font.size(colegio)[0]//2, 290)
+
+    iniciar = "Presiona ENTER para comenzar"
+    mostrar_texto(iniciar, (2, 6, 149), ANCHO//2 - font.size(iniciar)[0]//2, 320)
 
     pygame.display.flip()
 
@@ -205,8 +206,8 @@ while True:
     # Pelota
     pygame.draw.circle(pantalla, (255, 255, 255), (int(ball["x"]), int(ball["y"])), ball["radius"])
 
-    # Red
-    pygame.draw.rect(pantalla, (2, 6, 149), (ANCHO//2 - 5, 200, 10, 200))
+    # Red simple - bloque gris claro neutro
+    pygame.draw.rect(pantalla, (190, 190, 190), (ANCHO//2 - 5, 200, 10, 200))
 
     # Puntos
     mostrar_texto(f"{p1_score}", (255, 0, 0), 50, 20)
